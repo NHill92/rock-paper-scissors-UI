@@ -5,6 +5,7 @@ html, body {
 
 body {
     font-family: sans-serif;
+    background-color: #bbb;
 }
 
 .container {
@@ -17,6 +18,14 @@ body {
 }
 
 div {
-    margin: 20px;
+    margin: 20px 10px;
+}
+
+#play-btns button {
+    margin: 0 0.5rem;
+}
+
+.score {
+    display: inline;
 }
 
