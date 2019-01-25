@@ -3,51 +3,70 @@ const buttons = document.querySelectorAll('button');
 const playButtons = document.getElementsByClassName('play-btn');
 let playerScore = 0;
 let computerScore = 0;
+let playerChoice = '';
+let computerChoice = '';
 
-buttons.forEach(button => addEventListener('click', game));
+// buttons.forEach(buttons => addEventListener('click', game));
 
-function computerPlay() {
-    return choices[Math.floor(Math.random() * choices.length)];
-}
+document.addEventListener('click', function (e) {
+    if (e.target.matches('.play-btn')) {
+        playerChoice = e.target.id.charAt(0).toUpperCase() + e.target.id.slice(1);
 
-function game(e) {    
-    const computerChoice = computerPlay();
-    const btnPressed = e.target.id.charAt(0).toUpperCase() + e.target.id.slice(1);
+        playRound(computerPlay(), playerChoice);
 
-    if (btnPressed === computerChoice) {
-        document.getElementById('content').innerHTML = 'It\'s a draw!';
-    } else if (btnPressed === 'Reset-btn') {
+        if (checkScore()) {
+            getWinner();
+            disableBtn();
+        }
+    }
+    if (e.target.matches('#reset-btn')) {
         playerScore = 0;
         computerScore = 0;
         document.getElementById('player-score').innerHTML = playerScore;
         document.getElementById('computer-score').innerHTML = computerScore;
         document.getElementById('content').innerHTML = '';
-        for (let i = 0; i < playButtons.length; i++) {
-            playButtons[i].disabled = false;
-        }
-    } else if ((btnPressed === 'Rock' && computerChoice === 'Scissors') || (btnPressed === 'Paper' && computerChoice === 'Rock') || (btnPressed === 'Scissors' && computerChoice === 'Paper')) {
-        document.getElementById('content').innerHTML = 'You win! ' + btnPressed + ' beats ' + computerChoice + '.';
-        playerScore++;
-        document.getElementById('player-score').innerHTML = playerScore;
-    } else {
-        document.getElementById('content').innerHTML = 'You lose... ' + computerChoice + ' beats ' + btnPressed + '.';
-        computerScore++;
-        document.getElementById('computer-score').innerHTML = computerScore;
+        enableBtn();
     }
+});
 
-    if (playerScore === 5 || computerScore === 5) {
-        
-        for (let i = 0; i < playButtons.length; i++) {
-            playButtons[i].disabled = true;
-        }
+function computerPlay() {
+    return choices[Math.floor(Math.random() * choices.length)];
+}
 
-        if (playerScore > computerScore) {
-            document.getElementById('content').innerHTML = 'YOU WIN!!!';
-        } else {
-            document.getElementById('content').innerHTML = 'You lost... Play Again!'
-        }
+function disableBtn() {
+    for (let i = 0; i < playButtons.length; i++) {
+        playButtons[i].disabled = true;
     }
 }
 
-// const buttons = document.querySelectorAll('button');
-// buttons.forEach(button => addEventListener('click', game));
+function enableBtn() {
+    for (let i = 0; i < playButtons.length; i++) {
+        playButtons[i].disabled = false;
+    }
+}
+
+function getWinner() {
+    if (playerScore > computerScore) {
+        document.getElementById('content').innerHTML = 'YOU WIN!!!';
+    } else {
+        document.getElementById('content').innerHTML = 'You lost... Play Again!';
+    }
+}
+
+function playRound(computerChoice, playerChoice) {
+    if (playerChoice === computerChoice) {
+        document.getElementById('content').innerHTML = 'It\'s a draw!';
+    } else if ((playerChoice === 'Rock' && computerChoice === 'Scissors') || (playerChoice === 'Paper' && computerChoice === 'Rock') || (playerChoice === 'Scissors' && computerChoice === 'Paper')) {
+        document.getElementById('content').innerHTML = 'You win! ' + playerChoice + ' beats ' + computerChoice + '.';
+        playerScore++;
+        document.getElementById('player-score').innerHTML = playerScore;
+    } else {
+        document.getElementById('content').innerHTML = 'You lose... ' + computerChoice + ' beats ' + playerChoice + '.';
+        computerScore++;
+        document.getElementById('computer-score').innerHTML = computerScore;
+    }
+}
+
+function checkScore() {
+    return playerScore === 5 || computerScore === 5;
+}
